@@ -47,7 +47,7 @@ type Result = {
   correct: boolean;
   selected: number | null;
   time_taken: number;
-  estimated_time: number;
+  estimated_time: number | null;
   timed_out: boolean;
 };
 
@@ -111,7 +111,7 @@ function QuestionPage() {
         selected: choice,
         correct,
         time_taken: timeTaken,
-        estimated_time: question.estimated_time,
+        estimated_time: question.estimated_time ?? 0,
         timed_out: timedOut,
         mode: search.challenge ? "challenge" : (search.source ?? "practice"),
       });
@@ -231,8 +231,8 @@ function QuestionPage() {
             {subtest?.name ?? question.subtest.toUpperCase()} · {material?.name ?? question.material}
           </p>
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-            <span className="rounded-full bg-secondary px-2.5 py-1 capitalize">{question.difficulty}</span>
-            <span className="rounded-full bg-secondary px-2.5 py-1">~{question.estimated_time}s</span>
+            {question.difficulty && <span className="rounded-full bg-secondary px-2.5 py-1 capitalize">{question.difficulty}</span>}
+            {question.estimated_time !== null && <span className="rounded-full bg-secondary px-2.5 py-1">~{question.estimated_time}s</span>}
           </div>
         </div>
 
@@ -304,18 +304,18 @@ function QuestionPage() {
                 </>
               )}
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4 border-y border-border py-4 text-sm">
+            <div className={cn("mt-4 grid gap-4 border-y border-border py-4 text-sm", question.estimated_time === null ? "grid-cols-1" : "grid-cols-2")}>
               <div>
                 <p className="text-muted-foreground">Your time</p>
                 <p className="mt-1 font-semibold">{elapsed}s</p>
               </div>
-              <div>
+              {question.estimated_time !== null && <div>
                 <p className="text-muted-foreground">Estimated time</p>
                 <p className="mt-1 font-semibold">{question.estimated_time}s</p>
-              </div>
+              </div>}
             </div>
-            <h2 className="mt-5 font-display font-bold">Explanation</h2>
-            <p className="mt-2 leading-relaxed text-muted-foreground">{question.explanation}</p>
+            {question.explanation && <><h2 className="mt-5 font-display font-bold">Explanation</h2>
+            <p className="mt-2 whitespace-pre-line leading-relaxed text-muted-foreground">{question.explanation}</p></>}
             <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Button type="button" variant="outline" onClick={() => setNeedsReview(question.id, !flagged)}>
                 {flagged ? <BookmarkCheck /> : <Bookmark />}

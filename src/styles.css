@@ -223,3 +223,21 @@
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
 }
+
+.home-drill {
+  isolation: isolate;
+  background: linear-gradient(135deg, var(--foreground), color-mix(in oklch, var(--foreground) 86%, var(--primary)));
+}
+.home-drill-reflection {
+  background: linear-gradient(118deg, transparent 28%, color-mix(in oklch, var(--primary-foreground) 9%, transparent) 50%, transparent 68%);
+}
+.home-logo {
+  opacity: 0.16;
+  filter: blur(2px) saturate(0.9);
+  transform: scale(1.08);
+}
+.home-logo-glow {
+  background: color-mix(in oklch, var(--primary) 35%, transparent);
+  filter: blur(42px);
+  opacity: 0.5;
+}

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Clock3, Flame, RotateCcw, Target } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3, Flame, GraduationCap, RotateCcw, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metric, MiniLine, Page, ProgressBar, Surface } from "@/components/app-ui";
 import { progress } from "@/data/mock-data";
@@ -50,10 +50,17 @@ function HomePage() {
     </section>
 
     <section className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
-      <Surface className="relative overflow-hidden bg-foreground text-primary-foreground">
-        <div className="relative z-10 flex h-full min-h-64 flex-col justify-between">
+      <Surface className="home-drill relative overflow-hidden border-primary/15 bg-foreground text-primary-foreground">
+        <div className="home-drill-reflection pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex w-3/5 items-center justify-center sm:w-1/2">
+          {showInstitution ? <>
+            <div className="home-logo-glow absolute h-48 w-48 rounded-full md:h-64 md:w-64" />
+            <img src={targetInstitution.logo} alt="" className="home-logo h-44 w-44 object-contain md:h-64 md:w-64" />
+          </> : <GraduationCap className="home-logo h-40 w-40 md:h-56 md:w-56" strokeWidth={1} />}
+        </div>
+        <div className="relative z-10 flex h-full min-h-64 max-w-[72%] flex-col justify-between sm:max-w-[62%]">
           <div><p className="text-sm font-semibold text-primary-foreground/65">TODAY'S DRILL</p><h2 className="mt-3 font-display text-3xl font-bold">15 Questions</h2><p className="mt-2 text-primary-foreground/70">Based on your weak areas</p></div>
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><span className="flex items-center gap-2 text-sm text-primary-foreground/75"><Clock3 className="h-4 w-4" /> ~12 min</span><Button asChild size="lg" className="bg-card text-foreground shadow-none hover:bg-card/90"><Link to="/question" search={{ source: "today", material: "tiu-4", count: 10, difficulty: "All", status: "All", challenge: false }}>Start Drill <ArrowRight /></Link></Button></div>
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><span className="flex items-center gap-2 text-sm text-primary-foreground/75"><Clock3 className="h-4 w-4" /> ~12 min</span><Button asChild size="lg" className="bg-card text-foreground shadow-none hover:bg-card/90"><Link to="/question" search={{ source: "today", material: "skd-tiu-4", count: 10, difficulty: "All", status: "All", challenge: false }}>Start Drill <ArrowRight /></Link></Button></div>
         </div>
       </Surface>
       <Surface className="flex flex-col justify-between">

@@ -1,4 +1,5 @@
 import { materialById, type Difficulty, type ExamId } from "./catalog";
+import { importedQuestionBank } from "./imported-questions";
 
 /**
  * Canonical question contract. Field names mirror the future database columns
@@ -13,10 +14,11 @@ export type Question = {
   options: string[];
   correct_answer: number;
   explanation: string;
-  difficulty: Difficulty;
+  difficulty: Difficulty | null;
   /** seconds a well-prepared student should need */
-  estimated_time: number;
+  estimated_time: number | null;
   tags: string[];
+  source?: string;
 };
 
 type Raw = [
@@ -132,7 +134,7 @@ const raw: Raw[] = [
   ["tbi-vocabulary-1", "The idiom 'once in a blue moon' means...", ["Very often", "Very rarely", "At night", "Immediately", "Never"], 1, "'Once in a blue moon' describes something that happens very rarely.", "medium", 40, ["idiom"]],
 ];
 
-export const questions: Question[] = raw.map(
+const originalQuestions: Question[] = raw.map(
   ([material, question, options, correct_answer, explanation, difficulty, estimated_time, tags], index) => {
     const catalogMaterial = materialById(material);
     if (!catalogMaterial) throw new Error(`Unknown material id: ${material}`);
@@ -151,6 +153,18 @@ export const questions: Question[] = raw.map(
     };
   },
 );
+
+/** The full import remains available for editorial review; only ready rows are playable. */
+export const storedImportedQuestions = importedQuestionBank;
+
+export const importedQuestions: Question[] = importedQuestionBank
+  .filter(
+    (item): item is typeof item & { correct_answer: number } =>
+      item.status === "ready" && item.correct_answer !== null && item.options.every(Boolean),
+  )
+  .map(({ status: _status, ...item }) => item);
+
+export const questions: Question[] = [...originalQuestions, ...importedQuestions];
 
 export const questionById = (id: string) => questions.find((item) => item.id === id);
 export const questionsForMaterial = (materialId: string) =>
